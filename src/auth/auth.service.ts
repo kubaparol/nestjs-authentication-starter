@@ -32,4 +32,16 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
+
+  async register(user: any) {
+    const existingUser = await this.usersService.findOne(user.username);
+
+    if (existingUser) {
+      throw new BadRequestException('User already exists');
+    }
+
+    await this.usersService.create(user);
+
+    return this.login(user);
+  }
 }
