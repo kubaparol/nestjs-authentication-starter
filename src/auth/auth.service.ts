@@ -6,9 +6,9 @@ import {
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthDto } from './dto';
 import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { SignInDto, SignUpDto } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -18,8 +18,8 @@ export class AuthService {
     private prisma: PrismaService,
   ) {}
 
-  async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
+  async validateUser(email: string, pass: string): Promise<any> {
+    const user = await this.usersService.findOne(email);
 
     if (!user) {
       throw new BadRequestException('User not found');
@@ -34,7 +34,7 @@ export class AuthService {
     return null;
   }
 
-  async signin(dto: AuthDto) {
+  async signin(dto: SignInDto) {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
     });
@@ -57,7 +57,7 @@ export class AuthService {
     };
   }
 
-  async signup(dto: AuthDto) {
+  async signup(dto: SignUpDto) {
     const hash = await argon.hash(dto.password);
 
     try {
