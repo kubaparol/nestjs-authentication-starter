@@ -4,7 +4,7 @@ import { UsersModule } from './users/users.module';
 
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtGuard } from './auth/guards/jwt.guard';
+import { JwtGuard } from './auth/guards';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
