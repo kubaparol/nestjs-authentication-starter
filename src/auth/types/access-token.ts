@@ -1,4 +1,4 @@
-export type AccessTokenValue = {
+export type DecodedAccessToken = {
   firstName: string;
   lastName: string;
   email: string;
@@ -7,7 +7,7 @@ export type AccessTokenValue = {
   exp: number;
 };
 
-export type AccessTokenPayload = Omit<AccessTokenValue, 'iat' | 'exp'>;
+export type AccessTokenUserInfo = Omit<DecodedAccessToken, 'iat' | 'exp'>;
 
 export type AccessTokenResponse = {
   access_token: string;

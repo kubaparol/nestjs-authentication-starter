@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
-import * as argon from 'argon2';
+import * as bcrypt from 'bcrypt';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { SignInDto, SignUpDto } from './dto';
-import { AccessTokenPayload, AccessTokenResponse } from './types';
+import { AccessTokenUserInfo, AccessTokenResponse } from './types';
 import type { User } from '@prisma/client';
 @Injectable()
 export class AuthService {
@@ -20,7 +20,7 @@ export class AuthService {
 
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
-    const pwMatches = await argon.verify(user.hash, dto.password);
+    const pwMatches = await bcrypt.compare(dto.password, user.hash);
 
     if (!pwMatches)
       throw new HttpException('Invalid password', HttpStatus.BAD_REQUEST);
@@ -33,7 +33,7 @@ export class AuthService {
       where: { email: dto.email },
     });
 
-    const payload: AccessTokenPayload = {
+    const payload: AccessTokenUserInfo = {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
@@ -46,7 +46,10 @@ export class AuthService {
   }
 
   async signUp(dto: SignUpDto): Promise<AccessTokenResponse> {
-    const hash = await argon.hash(dto.password);
+    const hash = await bcrypt.hash(
+      dto.password,
+      Number(process.env.BCRYPT_SALT_ROUNDS),
+    );
 
     try {
       await this.prisma.user.create({
