@@ -8,7 +8,3 @@ export type DecodedAccessToken = {
 };
 
 export type AccessTokenUserInfo = Omit<DecodedAccessToken, 'iat' | 'exp'>;
-
-export type AccessTokenResponse = {
-  access_token: string;
-};
