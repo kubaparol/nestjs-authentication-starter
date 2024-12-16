@@ -1,17 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-
-export type User = {
-  userId: number;
-  username: string;
-  password: string;
-};
+import { MeResponse } from './responses';
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async getMe(id: string) {
+  async getMe(id: string): Promise<MeResponse> {
     const user = this.prisma.user.findUnique({
       where: { id },
       select: {
