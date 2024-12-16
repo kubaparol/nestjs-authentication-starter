@@ -4,7 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { SignInDto, SignUpDto } from './dto';
-import { AccessTokenPayload, AccessTokenResponse } from './types';
+import { AccessTokenUserInfo, AccessTokenResponse } from './types';
 import type { User } from '@prisma/client';
 @Injectable()
 export class AuthService {
@@ -33,7 +33,7 @@ export class AuthService {
       where: { email: dto.email },
     });
 
-    const payload: AccessTokenPayload = {
+    const payload: AccessTokenUserInfo = {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
