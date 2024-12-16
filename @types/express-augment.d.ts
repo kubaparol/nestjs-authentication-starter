@@ -1,8 +1,8 @@
 import 'express';
-import { AccessTokenValue } from 'src/auth/types';
+import { AccessTokenUserInfo } from 'src/auth/types';
 
 declare module 'express' {
   export interface Request {
-    user?: AccessTokenValue;
+    user?: AccessTokenUserInfo;
   }
 }

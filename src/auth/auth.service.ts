@@ -3,9 +3,10 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { SignInDto, SignUpDto } from './dto';
-import { AccessTokenUserInfo, AccessTokenResponse } from './types';
+import { SignInDto, SignUpDto } from './dtos';
+import { AccessTokenUserInfo } from './types';
 import type { User } from '@prisma/client';
+import { AccessTokenResponse } from './responses';
 @Injectable()
 export class AuthService {
   constructor(
@@ -23,7 +24,7 @@ export class AuthService {
     const pwMatches = await bcrypt.compare(dto.password, user.hash);
 
     if (!pwMatches)
-      throw new HttpException('Invalid password', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
 
     return user;
   }

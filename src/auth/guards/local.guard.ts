@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { plainToClass } from 'class-transformer';
-import { SignInDto } from '../dto';
+import { SignInDto } from '../dtos';
 import { validate } from 'class-validator';
 
 @Injectable()
