@@ -22,6 +22,7 @@ A starter template for NestJS applications with built-in authentication using JW
 ## Getting Started
 
 1. Clone the repository
+
 2. Install dependencies:
 
 ```bash
