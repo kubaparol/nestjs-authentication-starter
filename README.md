@@ -1,73 +1,176 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# NestJS Authentication Starter
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A starter template for NestJS applications with built-in authentication using JWT, Passport, and Prisma.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+- 🔐 JWT Authentication
+- 📱 Local Authentication Strategy
+- 🔄 Passport Integration
+- 📚 Swagger API Documentation
+- 🗃️ Prisma ORM
+- 🐳 Docker support for development database
+- ✨ Input validation using class-validator
+- 🔒 Password hashing with bcrypt
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Prerequisites
 
-## Installation
+- Node.js
+- pnpm
+- Docker (for development database)
+
+## Getting Started
+
+1. Clone the repository
+2. Install dependencies:
 
 ```bash
-$ pnpm install
+pnpm install
 ```
 
-## Running the app
+3. Configure environment:
 
 ```bash
-# development
-$ pnpm run start
+# Copy the example environment file
+cp .env.example .env
 
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+# Open .env and update the values:
+DATABASE_URL="postgresql://postgres:123@localhost:5432/nest?schema=public"
+JWT_SECRET="your-secret-key"           # Change this to a secure random string
+BCRYPT_SALT_ROUNDS=10
+PORT=5000
 ```
 
-## Test
+4. Set up Docker environment:
 
 ```bash
-# unit tests
-$ pnpm run test
+# Create and start the PostgreSQL container
+docker compose up db -d
 
-# e2e tests
-$ pnpm run test:e2e
+# Verify the container is running
+docker compose ps
 
-# test coverage
-$ pnpm run test:cov
+# Check container logs if needed
+docker compose logs db
 ```
 
-## Support
+5. Initialize the database:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+# Apply database migrations
+pnpm prisma:dev:deploy
 
-## Stay in touch
+# Alternative: Restart database (removes existing data)
+pnpm db:dev:restart
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+6. Start the application:
 
-## License
+```bash
+pnpm start:dev
+```
 
-Nest is [MIT licensed](LICENSE).
+## API Documentation
+
+Once the application is running, visit `http://localhost:5000/api` to access the Swagger documentation.
+
+### Available Endpoints
+
+#### Auth
+
+- POST `/auth/signin` - Sign in with email and password
+- POST `/auth/signup` - Create a new user account
+
+#### Users
+
+- GET `/users/me` - Get current user information
+
+## Technologies
+
+- NestJS
+- PostgreSQL
+- Prisma
+- Passport
+- JWT
+- Swagger
+
+## Development Tools
+
+### Database Management
+
+- **Prisma Studio**: Web-based database browser
+
+  ```bash
+  npx prisma studio
+  ```
+
+  Access at `http://localhost:5555`
+
+- **Docker Commands**:
+
+  ```bash
+  # View database logs
+  docker compose logs db
+
+  # Stop all containers
+  docker compose down
+
+  # Rebuild containers
+  docker compose up --build
+  ```
+
+### API Testing
+
+- Swagger UI: `http://localhost:5000/api`
+- Example cURL requests:
+
+  ```bash
+  # Sign up
+  curl -X POST http://localhost:5000/auth/signup \
+    -H "Content-Type: application/json" \
+    -d '{"email":"test@example.com","password":"password123","firstName":"John","lastName":"Doe"}'
+
+  # Sign in
+  curl -X POST http://localhost:5000/auth/signin \
+    -H "Content-Type: application/json" \
+    -d '{"email":"test@example.com","password":"password123"}'
+  ```
+
+## Docker Configuration
+
+The project uses Docker Compose for local development. The default configuration:
+
+```yaml
+# PostgreSQL Database
+- Port: 5432 (external) -> 5432 (internal)
+- Username: postgres
+- Password: 123
+- Database: nest
+```
+
+Useful Docker commands:
+
+```bash
+# Start specific service
+docker compose up db -d
+
+# Stop all services
+docker compose down
+
+# Remove database volume and container
+pnpm db:dev:rm
+
+# View logs
+docker compose logs db -f
+
+# Rebuild container
+docker compose up db --build
+```
+
+## Scripts
+
+- `pnpm start:dev` - Start the application in development mode
+- `pnpm db:dev:restart` - Restart the development database
+- `pnpm build` - Build the application
+- `pnpm test` - Run tests
+- `pnpm lint` - Lint the codebase
