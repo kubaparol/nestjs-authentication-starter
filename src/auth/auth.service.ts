@@ -7,11 +7,14 @@ import { SignInDto, SignUpDto } from './dtos';
 import { AccessTokenUserInfo } from './types';
 import type { User } from '@prisma/client';
 import { AccessTokenResponse } from './responses';
+import { EmailService } from 'src/email/email.service';
+
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private prisma: PrismaService,
+    private emailService: EmailService,
   ) {}
 
   async validateUser(dto: SignInDto): Promise<User> {
@@ -61,6 +64,8 @@ export class AuthService {
           hash,
         },
       });
+
+      await this.emailService.sendWelcomeEmail(dto.email, dto.firstName);
 
       return this.signIn({ email: dto.email, password: dto.password });
     } catch (error) {
