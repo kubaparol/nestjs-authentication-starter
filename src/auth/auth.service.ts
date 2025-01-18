@@ -8,6 +8,7 @@ import { AccessTokenUserInfo } from './types';
 import type { User } from '@prisma/client';
 import { AccessTokenResponse } from './responses';
 import { EmailService } from 'src/email/email.service';
+
 @Injectable()
 export class AuthService {
   constructor(
