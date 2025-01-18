@@ -9,7 +9,7 @@ export class EmailService {
     return await this.mailerService.sendMail({
       to: email,
       subject: 'Welcome to the app!',
-      template: 'hello',
+      template: 'welcome',
       context: {
         name,
       },
